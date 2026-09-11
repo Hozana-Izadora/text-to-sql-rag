@@ -1,0 +1,7 @@
+{
+  "source": { "kind": "uv", "root": "." },
+  "graphs": {
+    "inquiro": "./app/agents/graph.py:build_graph"
+  },
+  "env": "../.env"
+}

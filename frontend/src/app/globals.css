@@ -1,0 +1,212 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Design tokens — Inquiro
+   Tailwind v4: os tokens abaixo viram utilitários (bg-bg-surface, text-text-muted,
+   bg-accent, rounded-card, font-mono, ...). `@theme inline` faz o utilitário
+   referenciar a CSS var diretamente, para o toggle dark/light funcionar em runtime.
+--------------------------------------------------------------------------- */
+
+@theme inline {
+  --color-bg-base: var(--bg-base);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-elevated: var(--bg-elevated);
+
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-subtle: var(--accent-subtle);
+  --color-accent-text: var(--accent-text);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+  --color-info: var(--info);
+
+  --radius-card: 12px;
+  --radius-bubble: 16px;
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SF Mono", monospace;
+}
+
+/* Dark é o padrão (dark-first). */
+:root {
+  --bg-base: #0f1117;
+  --bg-surface: #161922;
+  --bg-elevated: #1e2130;
+  --border-subtle: #2a2d3a;
+  --border-strong: #3d4155;
+  --text-primary: #e4e5ea;
+  --text-secondary: #8b8fa3;
+  --text-muted: #5a5e72;
+  color-scheme: dark;
+
+  /* Constantes nos dois modos */
+  --accent: #6c5ce7;
+  --accent-hover: #7d6ff0;
+  --accent-subtle: rgba(108, 92, 231, 0.12);
+  --accent-text: #a294f9;
+  --success: #00c48c;
+  --warning: #ffb020;
+  --error: #ff4757;
+  --info: #3b82f6;
+}
+
+/* Light mode — opt-in via .light no <html>. */
+:root.light {
+  --bg-base: #ffffff;
+  --bg-surface: #f8f9fb;
+  --bg-elevated: #f0f1f5;
+  --border-subtle: #e2e4ea;
+  --border-strong: #c8ccd8;
+  --text-primary: #1a1c23;
+  --text-secondary: #5a5e72;
+  --text-muted: #8b8fa3;
+  color-scheme: light;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+/* ---------------------------------------------------------------------------
+   Micro-interações
+--------------------------------------------------------------------------- */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-in {
+  animation: fadeInUp 200ms ease-out;
+}
+
+@keyframes dotBounce {
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-6px);
+  }
+}
+.dot-bounce span {
+  animation: dotBounce 1.2s infinite;
+}
+.dot-bounce span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.dot-bounce span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes chipPop {
+  0% {
+    transform: scale(0);
+  }
+  70% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.chip-pop {
+  animation: chipPop 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.animate-scale-in {
+  animation: scaleIn 200ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Acessibilidade
+--------------------------------------------------------------------------- */
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Scrollbar (combina com o tema)
+--------------------------------------------------------------------------- */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ---------------------------------------------------------------------------
+   SQL viewer — fundo sempre escuro (convenção de editores de código),
+   independente do modo. Tokens usados por highlightSql().
+--------------------------------------------------------------------------- */
+
+.sql-kw {
+  color: #ff7b72;
+  font-weight: 500;
+}
+.sql-str {
+  color: #a5d6ff;
+}
+.sql-num {
+  color: #79c0ff;
+}
+.sql-fn {
+  color: #d2a8ff;
+}
+.sql-alias {
+  color: #7ee787;
+}
+.sql-comment {
+  color: #8b949e;
+  font-style: italic;
+}

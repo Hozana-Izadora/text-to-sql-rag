@@ -1,0 +1,335 @@
+tables:
+  departments:
+    description: "Departamentos internos da corretora de seguros SeguraPro"
+    synonyms: ["departamentos", "setores", "áreas"]
+    columns:
+      name:
+        description: "Nome do departamento"
+        synonyms: ["departamento", "setor"]
+
+  brokers:
+    description: "Corretores e consultores de seguros da empresa, com registro SUSEP"
+    synonyms: ["corretores", "consultores", "vendedores", "produtores"]
+    columns:
+      registration_number:
+        description: "Número de registro do corretor na SUSEP"
+        synonyms: ["registro SUSEP", "número SUSEP", "matrícula"]
+      full_name:
+        description: "Nome completo do corretor"
+        synonyms: ["nome", "nome do corretor"]
+      hire_date:
+        description: "Data de contratação do corretor"
+        synonyms: ["data de admissão", "data de contratação"]
+      status:
+        description: "Status atual do corretor"
+        synonyms: ["situação"]
+        enum_values:
+          active: { label: "Ativo", description: "Corretor em exercício" }
+          inactive: { label: "Inativo", description: "Corretor desligado" }
+          on_leave: { label: "Afastado", description: "Corretor em licença" }
+      commission_rate:
+        description: "Percentual padrão de comissão sobre prêmios"
+        synonyms: ["taxa de comissão", "percentual de comissão"]
+
+  clients:
+    description: "Clientes da corretora, pessoas físicas (PF) e jurídicas (PJ)"
+    synonyms: ["clientes", "segurados", "contratantes"]
+    columns:
+      client_type:
+        description: "Tipo de pessoa: PF (física) ou PJ (jurídica)"
+        synonyms: ["tipo de cliente", "tipo de pessoa"]
+        enum_values:
+          PF: { label: "Pessoa Física", description: "Cliente CPF" }
+          PJ: { label: "Pessoa Jurídica", description: "Cliente CNPJ / empresa" }
+      document_number:
+        description: "CPF para PF ou CNPJ para PJ"
+        synonyms: ["CPF", "CNPJ", "documento"]
+      full_name:
+        description: "Nome completo (PF) ou razão social (PJ)"
+        synonyms: ["nome", "razão social", "nome do cliente"]
+      trade_name:
+        description: "Nome fantasia da empresa (apenas PJ)"
+        synonyms: ["nome fantasia"]
+      address_city:
+        description: "Cidade do endereço do cliente"
+        synonyms: ["cidade", "município"]
+      address_state:
+        description: "Estado (UF) do endereço"
+        synonyms: ["estado", "UF"]
+      status:
+        description: "Situação cadastral do cliente"
+        enum_values:
+          active: { label: "Ativo", description: "Cliente com cadastro válido" }
+          inactive: { label: "Inativo", description: "Cliente sem apólices ativas" }
+          prospect: { label: "Prospect", description: "Potencial cliente em prospecção" }
+
+  insurers:
+    description: "Seguradoras parceiras com as quais a corretora trabalha"
+    synonyms: ["seguradoras", "companhias de seguro", "cias"]
+    columns:
+      name:
+        description: "Razão social da seguradora"
+        synonyms: ["nome", "seguradora", "companhia"]
+      cnpj:
+        description: "CNPJ da seguradora"
+      susep_code:
+        description: "Código da seguradora na SUSEP"
+        synonyms: ["código SUSEP"]
+
+  insurance_branches:
+    description: "Ramos de seguro conforme classificação SUSEP (auto, vida, saúde, etc.)"
+    synonyms: ["ramos", "ramos de seguro", "tipos de seguro", "modalidades"]
+    columns:
+      code:
+        description: "Código do ramo na SUSEP"
+      name:
+        description: "Nome do ramo de seguro"
+        synonyms: ["ramo", "tipo de seguro", "modalidade"]
+      susep_group:
+        description: "Grupo de ramos na classificação SUSEP"
+        synonyms: ["grupo SUSEP", "categoria"]
+
+  products:
+    description: "Produtos de seguro oferecidos pelas seguradoras parceiras"
+    synonyms: ["produtos", "planos", "seguros"]
+    columns:
+      name:
+        description: "Nome comercial do produto de seguro"
+        synonyms: ["produto", "plano", "nome do seguro"]
+      min_premium:
+        description: "Valor mínimo de prêmio para o produto"
+        synonyms: ["prêmio mínimo"]
+
+  policies:
+    description: "Apólices de seguro emitidas pela corretora para os clientes"
+    synonyms: ["apólices", "contratos de seguro", "seguros contratados"]
+    columns:
+      policy_number:
+        description: "Número único da apólice"
+        synonyms: ["número da apólice", "nº apólice"]
+      start_date:
+        description: "Data de início da vigência"
+        synonyms: ["início da vigência", "vigência inicial"]
+      end_date:
+        description: "Data de fim da vigência"
+        synonyms: ["fim da vigência", "vencimento"]
+      premium_amount:
+        description: "Valor total do prêmio do seguro em reais"
+        synonyms: ["prêmio", "valor do prêmio", "valor do seguro", "custo"]
+      insured_amount:
+        description: "Importância segurada (valor máximo de cobertura)"
+        synonyms: ["importância segurada", "IS", "valor segurado"]
+      payment_method:
+        description: "Forma de pagamento do prêmio"
+        synonyms: ["forma de pagamento"]
+        enum_values:
+          boleto: { label: "Boleto", description: "Boleto bancário" }
+          cartao_credito: { label: "Cartão de Crédito", description: "Pagamento no cartão" }
+          debito_conta: { label: "Débito em Conta", description: "Débito automático" }
+          pix: { label: "PIX", description: "Pagamento instantâneo" }
+      installments:
+        description: "Número de parcelas do prêmio"
+        synonyms: ["parcelas", "número de parcelas"]
+      status:
+        description: "Status atual da apólice"
+        synonyms: ["situação da apólice"]
+        enum_values:
+          active: { label: "Vigente", description: "Apólice em vigor" }
+          expired: { label: "Vencida", description: "Vigência encerrada" }
+          cancelled: { label: "Cancelada", description: "Cancelada antes do vencimento" }
+          pending: { label: "Pendente", description: "Aguardando emissão" }
+          renewed: { label: "Renovada", description: "Renovada com novo contrato" }
+
+  policy_coverages:
+    description: "Coberturas contratadas em cada apólice"
+    synonyms: ["coberturas", "garantias"]
+    columns:
+      coverage_name:
+        description: "Nome da cobertura contratada"
+        synonyms: ["cobertura", "garantia"]
+      coverage_amount:
+        description: "Valor máximo da cobertura em reais"
+        synonyms: ["valor da cobertura", "limite"]
+      deductible:
+        description: "Valor da franquia paga pelo segurado em sinistro"
+        synonyms: ["franquia", "participação obrigatória"]
+      is_main:
+        description: "Indica se é a cobertura principal"
+
+  endorsements:
+    description: "Endossos são alterações feitas em apólices vigentes"
+    synonyms: ["endossos", "alterações", "aditivos"]
+    columns:
+      type:
+        description: "Tipo de endosso"
+        enum_values:
+          inclusion: { label: "Inclusão", description: "Adição de cobertura" }
+          exclusion: { label: "Exclusão", description: "Remoção de cobertura" }
+          modification: { label: "Alteração", description: "Mudança em cobertura existente" }
+          cancellation: { label: "Cancelamento", description: "Cancelamento da apólice" }
+      premium_difference:
+        description: "Diferença de prêmio (positivo = cobrança, negativo = restituição)"
+        synonyms: ["diferença de prêmio", "valor do endosso"]
+
+  claims:
+    description: "Sinistros reportados pelos segurados"
+    synonyms: ["sinistros", "ocorrências", "avisos de sinistro"]
+    columns:
+      claim_number:
+        description: "Número único do sinistro"
+        synonyms: ["número do sinistro", "protocolo"]
+      occurrence_date:
+        description: "Data em que o sinistro ocorreu"
+        synonyms: ["data do sinistro", "data da ocorrência"]
+      notification_date:
+        description: "Data em que foi comunicado à corretora"
+        synonyms: ["data de aviso", "data da notificação"]
+      estimated_loss:
+        description: "Valor estimado do prejuízo em reais"
+        synonyms: ["prejuízo estimado", "valor do dano"]
+      approved_amount:
+        description: "Valor aprovado pela seguradora para indenização"
+        synonyms: ["valor aprovado", "indenização"]
+      status:
+        description: "Status do sinistro"
+        enum_values:
+          open: { label: "Aberto", description: "Recém comunicado" }
+          in_analysis: { label: "Em Análise", description: "Em regulação pela seguradora" }
+          approved: { label: "Aprovado", description: "Indenização aprovada" }
+          denied: { label: "Negado", description: "Sinistro recusado" }
+          paid: { label: "Pago", description: "Indenização paga" }
+          closed: { label: "Encerrado", description: "Processo finalizado" }
+      denial_reason:
+        description: "Motivo da recusa quando negado"
+        synonyms: ["motivo da negativa"]
+
+  claim_documents:
+    description: "Documentos anexados ao processo de sinistro"
+    synonyms: ["documentos de sinistro", "anexos"]
+    columns:
+      document_type:
+        description: "Tipo do documento"
+        enum_values:
+          boletim_ocorrencia: { label: "Boletim de Ocorrência", description: "BO policial" }
+          laudo_pericial: { label: "Laudo Pericial", description: "Laudo técnico" }
+          foto: { label: "Fotografia", description: "Registro fotográfico" }
+          nota_fiscal: { label: "Nota Fiscal", description: "NF de bens danificados" }
+          orcamento: { label: "Orçamento", description: "Orçamento de reparo" }
+          receita_medica: { label: "Receita Médica", description: "Receita ou laudo médico" }
+          outros: { label: "Outros", description: "Outros documentos" }
+
+  commissions:
+    description: "Comissões dos corretores sobre as apólices"
+    synonyms: ["comissões", "receita de comissão", "ganhos"]
+    columns:
+      commission_rate:
+        description: "Percentual de comissão aplicado"
+        synonyms: ["taxa", "percentual"]
+      commission_amount:
+        description: "Valor em reais da comissão"
+        synonyms: ["valor da comissão", "receita"]
+      status:
+        description: "Status do pagamento"
+        enum_values:
+          pending: { label: "Pendente", description: "Ainda não paga" }
+          paid: { label: "Paga", description: "Comissão recebida" }
+          cancelled: { label: "Cancelada", description: "Cancelada por estorno" }
+      due_date:
+        description: "Data prevista para recebimento"
+        synonyms: ["data de vencimento", "previsão"]
+      paid_at:
+        description: "Data em que foi efetivamente paga"
+        synonyms: ["data do pagamento", "recebido em"]
+
+  payments:
+    description: "Parcelas de pagamento do prêmio pelo cliente"
+    synonyms: ["pagamentos", "parcelas", "prestações"]
+    columns:
+      installment_number:
+        description: "Número da parcela"
+        synonyms: ["parcela"]
+      due_date:
+        description: "Data de vencimento da parcela"
+        synonyms: ["vencimento"]
+      amount:
+        description: "Valor original da parcela"
+        synonyms: ["valor da parcela"]
+      paid_amount:
+        description: "Valor efetivamente pago"
+        synonyms: ["valor pago"]
+      status:
+        description: "Status da parcela"
+        enum_values:
+          pending: { label: "Pendente", description: "Não venceu ainda" }
+          paid: { label: "Paga", description: "Parcela paga" }
+          overdue: { label: "Em atraso", description: "Vencida e não paga" }
+          cancelled: { label: "Cancelada", description: "Parcela cancelada" }
+
+  quotes:
+    description: "Cotações de seguro solicitadas"
+    synonyms: ["cotações", "propostas", "orçamentos"]
+    columns:
+      quote_number:
+        description: "Número único da cotação"
+      valid_until:
+        description: "Data limite de validade"
+        synonyms: ["validade"]
+      status:
+        description: "Status da cotação"
+        enum_values:
+          pending: { label: "Pendente", description: "Em elaboração" }
+          sent: { label: "Enviada", description: "Enviada ao cliente" }
+          accepted: { label: "Aceita", description: "Cliente aceitou" }
+          rejected: { label: "Recusada", description: "Cliente recusou" }
+          expired: { label: "Expirada", description: "Expirou sem resposta" }
+
+  quote_items:
+    description: "Itens da cotação — cada item é uma proposta de seguradora diferente"
+    synonyms: ["itens de cotação", "opções"]
+    columns:
+      premium_amount:
+        description: "Valor do prêmio proposto"
+        synonyms: ["prêmio proposto"]
+      insured_amount:
+        description: "Importância segurada proposta"
+      is_selected:
+        description: "Se este item foi o escolhido pelo cliente"
+        synonyms: ["selecionado", "escolhido"]
+
+business_rules:
+  - table: policies
+    type: filter
+    text: "Quando perguntar sobre 'apólices vigentes' ou 'ativas', filtrar por status = 'active' AND end_date >= CURRENT_DATE"
+  - table: policies
+    type: filter
+    text: "Quando perguntar sobre 'apólices vencidas', filtrar por status = 'expired' OR end_date < CURRENT_DATE"
+  - table: payments
+    type: filter
+    text: "Quando perguntar sobre 'inadimplência' ou 'parcelas em atraso', filtrar por status = 'overdue'"
+  - table: claims
+    type: aggregation
+    text: "A 'sinistralidade' é calculada como: SUM(approved_amount) / SUM(premium_amount) das apólices, em percentual"
+  - table: claims
+    type: filter
+    text: "Quando perguntar sobre 'sinistros abertos', incluir status IN ('open', 'in_analysis')"
+  - table: commissions
+    type: aggregation
+    text: "A 'produção' de um corretor é o total de premium_amount das apólices que ele vendeu em um período"
+  - table: commissions
+    type: filter
+    text: "Quando perguntar sobre 'comissões a receber', filtrar commissions.status = 'pending'"
+  - table: null
+    type: general
+    text: "Todos os valores monetários estão em BRL (reais). Formatar com duas casas decimais."
+  - table: null
+    type: general
+    text: "Datas no banco estão no formato ISO (YYYY-MM-DD). Fuso horário America/Fortaleza (UTC-3)."
+  - table: null
+    type: join
+    text: "Para saber o ramo de seguro de uma apólice: policies -> products -> insurance_branches"
+  - table: null
+    type: join
+    text: "Para saber a seguradora de uma apólice: policies -> products -> insurers"
+  - table: quotes
+    type: general
+    text: "Uma cotação tem múltiplos quote_items de seguradoras diferentes. O item com is_selected = true é o contratado."

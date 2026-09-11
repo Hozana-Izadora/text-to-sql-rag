@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    @page {
+      size: A4;
+      margin: 2cm;
+      @bottom-center {
+        content: "Gerado por Inquiro — Página " counter(page);
+        font-size: 9px;
+        color: #666;
+      }
+    }
+    body { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 11pt; color: #1a1a1a; }
+    h1 { font-size: 18pt; color: #1e3a5f; margin-bottom: 4px; }
+    .subtitle { font-size: 10pt; color: #666; margin-bottom: 24px; }
+    .section-title { font-size: 13pt; font-weight: 600; color: #1e3a5f; border-bottom: 2px solid #e5e7eb; padding-bottom: 4px; margin: 20px 0 8px; }
+    .question { background: #f3f4f6; padding: 10px 14px; border-radius: 6px; font-style: italic; }
+    pre.sql { background: #1e293b; color: #a5f3fc; padding: 12px; border-radius: 6px; font-size: 9pt; overflow-x: auto; white-space: pre-wrap; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 10pt; }
+    th { background: #1e3a5f; color: white; padding: 8px 10px; text-align: left; }
+    td { padding: 6px 10px; border-bottom: 1px solid #e5e7eb; }
+    tr:nth-child(even) td { background: #f9fafb; }
+    .numeric { text-align: right; font-family: "Courier New", monospace; }
+    .chart-container { margin: 16px 0; text-align: center; }
+    .chart-container svg { max-width: 100%; }
+    .truncated { font-size: 9pt; color: #666; font-style: italic; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <h1>Relatório de Dados</h1>
+  <div class="subtitle">SeguraPro Corretora · {{ generated_at }}</div>
+
+  <div class="section-title">Consulta</div>
+  <div class="question">{{ question }}</div>
+
+  <div class="section-title">SQL Executado</div>
+  <pre class="sql">{{ sql }}</pre>
+
+  <div class="section-title">Análise</div>
+  <p>{{ response_text }}</p>
+
+  {% if chart_svg %}
+  <div class="section-title">Visualização</div>
+  <div class="chart-container">{{ chart_svg | safe }}</div>
+  {% endif %}
+
+  {% if columns %}
+  <div class="section-title">Dados ({{ row_count }} registros{% if truncated %}, truncado{% endif %})</div>
+  <table>
+    <thead><tr>{% for col in columns %}<th{% if col.is_numeric %} class="numeric"{% endif %}>{{ col.name }}</th>{% endfor %}</tr></thead>
+    <tbody>
+    {% for row in rows %}
+      <tr>{% for col in columns %}<td{% if col.is_numeric %} class="numeric"{% endif %}>{{ row[col.key] }}</td>{% endfor %}</tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% if truncated %}<div class="truncated">Exibindo os primeiros {{ rows | length }} registros de {{ row_count }}.</div>{% endif %}
+  {% endif %}
+</body>
+</html>

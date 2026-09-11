@@ -1,0 +1,77 @@
+services:
+  production-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: segurapro
+      POSTGRES_USER: segurapro_admin
+      POSTGRES_PASSWORD: ${PRODUCTION_DB_PASSWORD:-segurapro_dev}
+    ports:
+      - "5432:5432"
+    volumes:
+      - production_pgdata:/var/lib/postgresql/data
+      - ./database/init-schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./database/seed-data.sql:/docker-entrypoint-initdb.d/02-seed.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U segurapro_admin -d segurapro"]
+      interval: 5s
+      retries: 5
+
+  metadata-db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: querymind_metadata
+      POSTGRES_USER: querymind
+      POSTGRES_PASSWORD: ${METADATA_DB_PASSWORD:-querymind_dev}
+    ports:
+      - "5433:5432"
+    volumes:
+      - metadata_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U querymind -d querymind_metadata"]
+      interval: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file: .env
+    environment:
+      PRODUCTION_DB_HOST: production-db
+      METADATA_DB_HOST: metadata-db
+      METADATA_DB_PORT: "5432"
+    ports:
+      - "8000:8000"
+      # LangGraph Studio (langgraph dev) — ad-hoc, não sobe sozinho com o resto da
+      # stack; rode manualmente via `docker compose exec backend uv run langgraph dev
+      # --host 0.0.0.0 --port 2024 --config langgraph.json` quando precisar depurar o
+      # grafo visualmente.
+      - "2024:2024"
+    depends_on:
+      production-db:
+        condition: service_healthy
+      metadata-db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - ./data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # NEXT_PUBLIC_* é embutido no bundle do navegador em build-time — precisa ser
+        # um endereço alcançável do host onde o navegador roda (não o hostname interno
+        # do compose, tipo "backend"; o fetch() do frontend roda no navegador do
+        # usuário, fora da rede Docker).
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  production_pgdata:
+  metadata_pgdata:
