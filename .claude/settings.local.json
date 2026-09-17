@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(curl -s -o /dev/null -w \"delete: %{http_code}\\\\n\" -X DELETE localhost:8000/api/connections/fb1a98a2-8880-4a70-92ea-9c758230dda5)",
-      "Bash(docker exec *)"
+      "Bash(docker exec *)",
+      "Bash(pandoc --version)",
+      "Bash(xelatex --version)"
     ]
   }
 }

@@ -36,3 +36,17 @@ Thumbs.db
 
 # Data
 data/*.db
+
+
+tcc.md
+tcc.docx
+tcc.pdf
+inquiro.pdf
+abnt-template.tex
+abnt-reference.py
+abnt-reference.docx
+metadata.yaml
+build-tcc.sh
+build-tcc-docx.sh
+docx-abnt.lua
+docs/prompt-tcc-inquiro.md
